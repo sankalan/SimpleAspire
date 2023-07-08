@@ -1,0 +1,68 @@
+package dev.sankalan.SimpleAspire.models;
+
+import java.util.Date;
+
+public class LoanRepaymentSchedule {
+	private double amount;
+	private Date date;
+	private LoanRepaymentStatus status;
+	private double outstanding;
+
+	/**
+	 * @return the amount
+	 */
+	public double getAmount() {
+		return amount;
+	}
+	
+	/**
+	 * @param amount the amount to set
+	 */
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return date;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public LoanRepaymentStatus getStatus() {
+		return status;
+	}
+	
+	public void makePayment() {
+		this.status = LoanRepaymentStatus.PAID;
+		this.outstanding = 0.0;
+	}
+
+	public void adjustDueAmount(double amount) {
+		this.outstanding -= amount;
+	}
+
+	/**
+	 * @return the outstanding
+	 */
+	public double getOutstanding() {
+		return outstanding;
+	}
+
+	/**
+	 * @param due the outstanding to set
+	 */
+	public void setOutstanding(double due) {
+		this.outstanding = due;
+	}
+
+	public LoanRepaymentSchedule(double amount, Date date) {
+		this.amount = amount;
+		this.date = date;
+		this.outstanding = amount;
+		this.status = LoanRepaymentStatus.PENDING;
+	}
+}
