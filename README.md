@@ -61,7 +61,9 @@ The code is mainly divided into these components
 
 ### How to run
 *(Required: JDK 17+)*
-- **Build**: ./gradlew build
-- **Test**: ./gradlew test (Coverage report should be available at: /build/reports/jacoco/test/html/index.html)
-- **Run**: ./gradlew bootRun (Runs on Default port 8080)
-- **Run with custom port**: ./gradlew bootRun --args='--server.port=<PORT NUMBER>'
+- **Build**: `./gradlew build`
+- **Test**: `./gradlew test` (Coverage report should be available at: /build/reports/jacoco/test/html/index.html)
+- **Run**: `./gradlew bootRun` (Runs on Default port 8080)
+- **Run with custom port**: `./gradlew bootRun --args='--server.port=<PORT NUMBER>'`
+  
+**Postman Collection** : */postmanCollection/SimpleAspire.postman_collection.json*
