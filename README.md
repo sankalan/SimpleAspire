@@ -21,7 +21,7 @@ Users are pre-created. There is no functionality to add a new user. There are th
 In case you need any other user account, edit `data.sql` (src/main/resources) accordingly and restart the application.
 
 ### Assumptions
-- The application doesn't persist data. It uses an DB to store data in memory only.
+- The application doesn't persist data. It uses an DB to store data in memory only. However as it is already integrted with H2, persisting using any running DB instance should require som config change already.
 - [Basic authentication]([https://swagger.io/docs/specification/2-0/authentication/basic-authentication/#:~:text=Basic%20authentication%20is%20a%20very,%2Dencoded%20username%3Apassword%20string.) used with the above mentioned credentials to authenticate and authorise users. All the endpoints are safe-guarded. Haven't used Spring security for this rather implemented simple interceptor to perform authentication and inject user context to request.
 - ADMIN can view all loans while an USER can fetch only his/her loans.
 - Only ADMIN can approve a loan.
@@ -54,8 +54,9 @@ The code is mainly divided into these components
 ### Testing
 
 - Unit tests added (/src/test/java/dev/sankalan/SimpleAspire/)
-- Integration test added (/src/test/java/dev/sankalan/SimpleAspire/integration)
+- Integration test added (/src/test/java/dev/sankalan/SimpleAspire/integration): All features are tested in a sequence of 14 tests. (Few error scenarios are not yet covered)
 - Jacoco used to measure code coverage
+- Overall coverage is ~99%.
 
 ![Code Coverage](doc/SimpleAspire-Coverage.jpg)
 
@@ -67,3 +68,7 @@ The code is mainly divided into these components
 - **Run with custom port**: `./gradlew bootRun --args='--server.port=<PORT NUMBER>'`
   
 **Postman Collection** : */postmanCollection/SimpleAspire.postman_collection.json*
+
+### Demo Video
+
+[Video Link] (https://drive.google.com/file/d/1DsfGBQqLUQv9gPyVUOlms-gY6hfT7r9l/view?usp=sharing)
