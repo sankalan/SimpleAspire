@@ -17,7 +17,7 @@ public class AuthService {
 	
 	public User fetchUserContext(String basicAuthHeaderValue) {
 		if (!StringUtils.isBlank(basicAuthHeaderValue) 
-				&& basicAuthHeaderValue.toLowerCase().startsWith("basic")) {
+				&& basicAuthHeaderValue.startsWith("Basic")) {
 			// Authorization: Basic base64credentials
 			String base64Credentials = basicAuthHeaderValue.substring("Basic".length()).trim();
 			byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
@@ -28,7 +28,7 @@ public class AuthService {
 			if (values.length == 2) {
 				String username = values[0];
 				String password = values[1];
-				User user = userRepo.getUserByName(username);
+				User user = userRepo.findByUsername(username);
 				if ((user != null) && user.authenticate(password)) {
 					return user;
 				}

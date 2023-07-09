@@ -2,30 +2,47 @@ package dev.sankalan.SimpleAspire.models;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import dev.sankalan.SimpleAspire.converters.LoanRepaymentScheduleConverter;
 
 /**
  * Model for Loan data
  */
 
+@Entity
 public class Loan {
-	private String id ;
-	private String ownerId;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id ;
+	private int ownerId;
 	private double amount;
 	private double outstanding;
 	private int term;
 	private Date date;
 	private LoanStatus status;
+	
+	@Lob
+	@Convert(converter = LoanRepaymentScheduleConverter.class)
 	private List<LoanRepaymentSchedule> repayments;
+	
+	public Loan() {
+		
+	}
 
 	@JsonCreator
 	public Loan(
 			@JsonProperty("amount") double amount, 
 			@JsonProperty("term") int term) {
-		this.id = UUID.randomUUID().toString();
 		this.amount = amount;
 		this.outstanding = amount;
 		this.term = term;
@@ -37,18 +54,18 @@ public class Loan {
 	/**
 	 * @return the id
 	 */
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
 	/**
 	 * @return the owner
 	 */
-	public String getOwnerId() {
+	public int getOwnerId() {
 		return ownerId;
 	}
 
-	public void setOwnerId(String ownerId) {
+	public void setOwnerId(int ownerId) {
 		this.ownerId = ownerId;
 	}
 

@@ -5,12 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import dev.sankalan.SimpleAspire.models.SessionContext;
 import dev.sankalan.SimpleAspire.models.User;
 import dev.sankalan.SimpleAspire.services.AuthService;
-import dev.sankalan.SimpleAspire.session.SessionContext;
 import dev.sankalan.SimpleAspire.utils.ErrorMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,13 +43,17 @@ public class AuthInterceptor implements HandlerInterceptor {
 			
 		} catch (Exception e) {
 			log.error("Error occured while authenticating request : " + e.getMessage());
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.SERVER_ERROR);
+			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.getWriter().write(ErrorMessages.SERVER_ERROR);
+			return false;
 		}
 		
 		// If this is invalid request, then set the status as UNAUTHORIZED.
 		if (user == null) {
 			log.error("Unauthorised access detected.");
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ErrorMessages.AUTH_FAILED);
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+			response.getWriter().write(ErrorMessages.AUTH_FAILED);
+			return false;
 		}
 		
 		sessionContext.setUser(user);

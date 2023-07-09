@@ -16,15 +16,19 @@ import dev.sankalan.SimpleAspire.models.LoanStatus;
 import dev.sankalan.SimpleAspire.models.Repayment;
 import dev.sankalan.SimpleAspire.repositories.LoanRepository;
 import dev.sankalan.SimpleAspire.utils.ErrorMessages;
+import dev.sankalan.SimpleAspire.utils.LoanUtil;
 
 @Component
 public class LoanRepaymentService {
 	@Autowired
 	LoanRepository loanRepo;
+	@Autowired
+	LoanUtil loanUtil;
+	
 	private final Logger log = LogManager.getLogger(getClass());
 	
-	public void addRepayment(String id, Repayment installment) {
-		Loan loan = loanRepo.getById(id);
+	public void addRepayment(int id, Repayment installment) {
+		Loan loan = loanRepo.findById(id).orElse(null);
 		log.info("Repaying: " + installment.getAmount());
 		validateLoanStatus(loan);
 		
@@ -47,13 +51,13 @@ public class LoanRepaymentService {
 							nextSchedule.makePayment();
 						} else {
 							log.info("Adjusting installment no: " + (j+1));
-							nextSchedule.adjustDueAmount(excessAmount);
+							nextSchedule.setOutstanding(loanUtil.getFormattedPrice(nextSchedule.getOutstanding() - excessAmount));
 							excessAmount = 0;
 						}
 						j++;
 					}
 					log.info("Setting loan outstanding to be: " + (loan.getOutstanding()-installment.getAmount()));
-					loan.setOutstanding(loan.getOutstanding()-installment.getAmount());
+					loan.setOutstanding(loanUtil.getFormattedPrice(loan.getOutstanding()-installment.getAmount()));
 				} else {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INSUFFICIENT_REPAYMENT);
 				}
@@ -64,6 +68,8 @@ public class LoanRepaymentService {
 		if(repayments.get(repayments.size()-1).getStatus() == LoanRepaymentStatus.PAID) {
 			loan.completeLoanPayment();
 		}
+		
+		loanRepo.save(loan);
 		
 	}
 

@@ -1,9 +1,9 @@
 package dev.sankalan.SimpleAspire.services;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +19,7 @@ import dev.sankalan.SimpleAspire.models.User;
 import dev.sankalan.SimpleAspire.repositories.LoanRepository;
 import dev.sankalan.SimpleAspire.repositories.UserRepository;
 import dev.sankalan.SimpleAspire.utils.ErrorMessages;
+import dev.sankalan.SimpleAspire.utils.LoanUtil;
 
 @Component
 public class LoansService {
@@ -27,74 +28,76 @@ public class LoansService {
 	LoanRepository loanRepo;
 	@Autowired
 	UserRepository userRepo;
+	@Autowired
+	LoanUtil loanUtil;
 	
 	private final Logger log = LogManager.getLogger(getClass());
+
 	
 	public List<Loan> getAllLoans() {
-		System.out.println("Service: all loans: " + loanRepo.getAll());
-		return loanRepo.getAll();
+		log.info("Service: getting all loans: ");
+		List<Loan> loans = new ArrayList<Loan>();
+		loanRepo.findAll().forEach(loan -> loans.add(loan));
+		return loans;
 	}
 	
 	public List<Loan> getLoanByUser(String username) {
-		User user = userRepo.getUserByName(username);
+		log.info("Service: getting all loans for an user");
+		User user = userRepo.findByUsername(username);
 		if(user == null) {
 			log.error("Cannot find user");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessages.USER_NOT_FOUND);
 		}
-		return loanRepo.getByUserId(user.getUserId());
+		log.info("Service: getting all loans, for user: " + username);
+		return loanRepo.findByOwnerId(user.getUserId());
 	}
 	
 	public void createLoan(Loan loan, String ownerName) {
-		User user = userRepo.getUserByName(ownerName);
+		if(loan.getAmount()<=0 || loan.getTerm()<=0) {
+			log.error("Invalid input, amount:" + loan.getAmount() + ", term: " + loan.getTerm());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_FOR_CREATE);
+		}
+		User user = userRepo.findByUsername(ownerName);
 		if(user == null) {
 			log.error("Cannot find user");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessages.USER_NOT_FOUND);
 		}
 		loan.setOwnerId(user.getUserId());
 		loan.setRepayments(generateRepayments(loan));
-		loanRepo.add(loan);
+		loanRepo.save(loan);
 	}
 	
 	private List<LoanRepaymentSchedule> generateRepayments(Loan loan) {
-		double installmentAmount = getFormattedPrice(loan.getAmount()/loan.getTerm());
+		double installmentAmount = loanUtil.getFormattedPrice(loan.getAmount()/loan.getTerm());
 		Date lastDate = loan.getDate();
 		List<LoanRepaymentSchedule> repayments = new ArrayList<LoanRepaymentSchedule>();
 		
 		for(int i=0; i<loan.getTerm(); i++) {
-			Date nextDate = getNextDate(lastDate);
+			Date nextDate = loanUtil.getNextDate(lastDate);
 			LoanRepaymentSchedule repayment = new LoanRepaymentSchedule(installmentAmount, nextDate);
 			repayments.add(repayment);
 			lastDate = nextDate;
 		}
 		
-		double roundUpAdjustment = getFormattedPrice(installmentAmount + loan.getAmount() - installmentAmount*loan.getTerm());
+		double roundUpAdjustment = loanUtil.getFormattedPrice(installmentAmount + loan.getAmount() - installmentAmount*loan.getTerm());
 		
 		repayments.get(loan.getTerm()-1).setAmount(roundUpAdjustment);
 		repayments.get(loan.getTerm()-1).setOutstanding(roundUpAdjustment);
 		return repayments;
 	}
-	
-	private double getFormattedPrice(double price) {
-		DecimalFormat df=new DecimalFormat("0.00");
-		return (double) Double.parseDouble(df.format(price));
-	}
 
-	private Date getNextDate(Date lastDate) {
-		final int milliSecondsInOneWeek = 1000 * 60 * 60 * 24 * 7; //each installment is 7 days apart
-		return new Date(lastDate.getTime() + milliSecondsInOneWeek);
-	}
-
-	public void approveLoan(String id) {
-		Loan loan = loanRepo.getById(id);
+	public void approveLoan(int id) {
+		Optional<Loan> loan = loanRepo.findById(id);
 		
-		if(loan == null) {
+		if(!loan.isPresent()) {
 			log.error("Cannot find loan");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessages.LOAN_NOT_FOUND);
-		}else if(loan.getStatus() != LoanStatus.PENDING) {
+		}else if(loan.get().getStatus() != LoanStatus.PENDING) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, ErrorMessages.NOT_ELIGIBLE_FOR_APPROVAL);
 		}
 		
-		loan.approveLoan();
+		loan.get().approveLoan();
+		loanRepo.save(loan.get());
 	}
 
 }

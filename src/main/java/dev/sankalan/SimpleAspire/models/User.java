@@ -1,9 +1,17 @@
 package dev.sankalan.SimpleAspire.models;
 
-import java.util.UUID;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "user_table")
 public class User {
-	private String userId;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
 	private String username;
 	private String password;
 	private UserRole role;
@@ -11,8 +19,8 @@ public class User {
 	/**
 	 * @return the userId
 	 */
-	public String getUserId() {
-		return userId;
+	public int getUserId() {
+		return id;
 	}
 	
 	/**
@@ -27,13 +35,6 @@ public class User {
 	 */
 	public UserRole getRole() {
 		return role;
-	}
-
-	public User(String uname, String pswd, UserRole role) {
-		this.userId =  UUID.randomUUID().toString();
-		this.username = uname;
-		this.password = pswd;
-		this.role = role;
 	}
 	
 	public boolean authenticate(String pswd) {

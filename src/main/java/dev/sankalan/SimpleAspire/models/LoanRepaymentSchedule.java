@@ -58,6 +58,10 @@ public class LoanRepaymentSchedule {
 	public void setOutstanding(double due) {
 		this.outstanding = due;
 	}
+	
+	public LoanRepaymentSchedule() {
+		
+	}
 
 	public LoanRepaymentSchedule(double amount, Date date) {
 		this.amount = amount;

@@ -21,14 +21,14 @@ public class RepaymentController {
 	private final Logger log = LogManager.getLogger(getClass());
 	
 	@PostMapping("/loan/{id}/pay")
-	public void repayLoan(@PathVariable String id, @RequestBody Repayment repayment) {
+	public void repayLoan(@PathVariable int id, @RequestBody Repayment repayment) {
 		try {
 			loanRepaymentService.addRepayment(id, repayment);
 		}catch(ResponseStatusException ex) {
 			log.debug("Exception thrown from downstream");
 			throw ex;
 		}catch(Exception ex) {
-			log.error("Unexpected exception occurred while repaying loans.");
+			log.error("Unexpected exception occurred while repaying loans.", ex);
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.SERVER_ERROR);
 		}
 	}

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import dev.sankalan.SimpleAspire.models.Loan;
+import dev.sankalan.SimpleAspire.models.SessionContext;
 import dev.sankalan.SimpleAspire.services.LoansService;
-import dev.sankalan.SimpleAspire.session.SessionContext;
 import dev.sankalan.SimpleAspire.utils.ErrorMessages;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -32,12 +32,12 @@ public class CreateLoansController {
 		try {
 			loansService.createLoan(loan, sessionContext.getUser().getUsername());
 			response.setStatus(HttpServletResponse.SC_CREATED);
-			response.setHeader(HttpHeaders.LOCATION, loan.getId());
+			response.setHeader(HttpHeaders.LOCATION, loan.getId()+"");
 		}catch(ResponseStatusException ex) {
 			log.debug("Exception thrown from downstream while creating loan");
 			throw ex;
 		}catch(Exception ex) {
-			log.error("Unexpected exception occurred while creating loan.");
+			log.error("Unexpected exception occurred while creating loan.", ex);
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.SERVER_ERROR);
 		}
 	}

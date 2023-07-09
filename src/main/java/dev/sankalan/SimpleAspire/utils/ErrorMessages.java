@@ -27,4 +27,6 @@ public class ErrorMessages {
 			"No user found.";
 	public static final String NOT_ELIGIBLE_FOR_APPROVAL = 
 			"Loan is not in PENDING status.";
+	public static final String INVALID_INPUT_FOR_CREATE = 
+			"Invalid input, both loan amount and term should be non zero positive numbers.";
 };

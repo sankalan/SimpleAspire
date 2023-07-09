@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import dev.sankalan.SimpleAspire.models.Loan;
+import dev.sankalan.SimpleAspire.models.SessionContext;
 import dev.sankalan.SimpleAspire.models.UserRole;
 import dev.sankalan.SimpleAspire.services.LoansService;
-import dev.sankalan.SimpleAspire.session.SessionContext;
 import dev.sankalan.SimpleAspire.utils.ErrorMessages;
 
 @RestController
@@ -40,7 +40,7 @@ public class GetLoansController {
 			log.debug("Exception thrown from downstream");
 			throw ex;
 		}catch(Exception ex) {
-			log.error("Unexpected exception occurred while getting loans.");
+			log.error("Unexpected exception occurred while getting loans. Exception: " + ex);
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.SERVER_ERROR);
 		}
 		log.error("user invalid. Not valid user role: " + sessionContext.getUser().getRole());
