@@ -1,0 +1,92 @@
+{
+	"info": {
+		"_postman_id": "1a0a2a3d-c4a2-461c-8bed-6c76f51c7c69",
+		"name": "SimpleAspire",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28420330"
+	},
+	"item": [
+		{
+			"name": "GET loans",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "user1",
+						"username": "user1"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/loans"
+			},
+			"response": []
+		},
+		{
+			"name": "Create loans",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "user1",
+						"username": "user1"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 3000,\r\n    \"term\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/loan"
+			},
+			"response": []
+		},
+		{
+			"name": "APPROVE loan",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "admin",
+						"username": "admin"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"url": "localhost:8080/loan/1/approve"
+			},
+			"response": []
+		},
+		{
+			"name": "PAY loan",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "user1",
+						"username": "user1"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 1000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/loan/1/pay"
+			},
+			"response": []
+		}
+	]
+}
