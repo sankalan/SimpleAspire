@@ -88,7 +88,7 @@ public class LoansServiceTests {
 				assertThrows(ResponseStatusException.class,
 						() -> loansService.getLoanByUser(TestConstants.USERNAME));
 		
-		assertEquals(HttpStatus.NOT_FOUND, actualEx.getStatusCode());
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualEx.getStatusCode());
 		assertEquals(ErrorMessages.USER_NOT_FOUND, actualEx.getReason());
 	}
 	
@@ -158,7 +158,7 @@ public class LoansServiceTests {
 				assertThrows(ResponseStatusException.class,
 						() -> loansService.createLoan(loan1, TestConstants.USERNAME));
 		
-		assertEquals(HttpStatus.NOT_FOUND, actualEx.getStatusCode());
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualEx.getStatusCode());
 		assertEquals(ErrorMessages.USER_NOT_FOUND, actualEx.getReason());
 	}
 	
@@ -192,7 +192,7 @@ public class LoansServiceTests {
 				assertThrows(ResponseStatusException.class,
 						() -> loansService.approveLoan(TestConstants.LOAN_ID));
 		
-		assertEquals(HttpStatus.CONFLICT, actualEx.getStatusCode());
+		assertEquals(HttpStatus.NOT_ACCEPTABLE, actualEx.getStatusCode());
 		assertEquals(ErrorMessages.NOT_ELIGIBLE_FOR_APPROVAL, actualEx.getReason());
 	}
 }

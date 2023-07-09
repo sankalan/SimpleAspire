@@ -46,7 +46,7 @@ public class LoansService {
 		User user = userRepo.findByUsername(username);
 		if(user == null) {
 			log.error("Cannot find user");
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessages.USER_NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.USER_NOT_FOUND);
 		}
 		log.info("Service: getting all loans, for user: " + username);
 		return loanRepo.findByOwnerId(user.getUserId());
@@ -60,7 +60,7 @@ public class LoansService {
 		User user = userRepo.findByUsername(ownerName);
 		if(user == null) {
 			log.error("Cannot find user");
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessages.USER_NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessages.USER_NOT_FOUND);
 		}
 		loan.setOwnerId(user.getUserId());
 		loan.setRepayments(generateRepayments(loan));
@@ -93,7 +93,7 @@ public class LoansService {
 			log.error("Cannot find loan");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessages.LOAN_NOT_FOUND);
 		}else if(loan.get().getStatus() != LoanStatus.PENDING) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, ErrorMessages.NOT_ELIGIBLE_FOR_APPROVAL);
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ErrorMessages.NOT_ELIGIBLE_FOR_APPROVAL);
 		}
 		
 		loan.get().approveLoan();

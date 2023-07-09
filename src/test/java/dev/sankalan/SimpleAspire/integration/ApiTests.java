@@ -355,7 +355,7 @@ public class ApiTests {
     
     @Test
     @Order(13)
-    public void testApproveLoans_admin_nonPeningLoan() throws Exception {
+    public void testApproveLoans_admin_nonPendingLoan() throws Exception {
     	headers.add(AUTH_HEADER, adminCred);
     	
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
@@ -365,7 +365,7 @@ public class ApiTests {
         ResponseEntity<String> response = restTemplate.exchange(
           url, HttpMethod.POST, entity, String.class);
         
-        assertEquals(409, response.getStatusCodeValue());
+        assertEquals(406, response.getStatusCodeValue());
     	
     }
     
