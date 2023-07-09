@@ -24,6 +24,10 @@ public class ApproveLoansController {
 	
 	private final Logger log = LogManager.getLogger(getClass());
 	
+	/**
+	 * Handles loan approval
+	 * @param id
+	 */
 	@PostMapping("/loan/{id}/approve")
 	public void approveLoan(@PathVariable int id) {
 		if(sessionContext.getUser().getRole() != UserRole.ADMIN) {

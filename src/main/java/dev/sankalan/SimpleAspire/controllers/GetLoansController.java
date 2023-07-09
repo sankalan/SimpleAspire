@@ -26,6 +26,10 @@ public class GetLoansController {
 	
 	private final Logger log = LogManager.getLogger(getClass());
 	
+	/**
+	 * Get loan handler
+	 * @return List<Loan>
+	 */
 	@GetMapping("/loans")
 	public List<Loan> getLoans() {
 		System.out.println("Get all loans");

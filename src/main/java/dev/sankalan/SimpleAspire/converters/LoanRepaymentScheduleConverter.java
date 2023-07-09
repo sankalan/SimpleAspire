@@ -13,6 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.sankalan.SimpleAspire.models.LoanRepaymentSchedule;
 import jakarta.persistence.AttributeConverter;
 
+/**
+ * Handles to and fro convertion from {@link LoanRepaymentSchedule} to String for DB
+ */
 public class LoanRepaymentScheduleConverter implements AttributeConverter<List<LoanRepaymentSchedule>, String> {
 
 	private final Logger log = LogManager.getLogger(getClass());

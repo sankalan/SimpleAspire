@@ -2,6 +2,9 @@ package dev.sankalan.SimpleAspire.models;
 
 import java.util.Date;
 
+/**
+ * Model for Loan repay schedule data
+ */
 public class LoanRepaymentSchedule {
 	private double amount;
 	private Date date;
@@ -36,11 +39,18 @@ public class LoanRepaymentSchedule {
 		return status;
 	}
 	
+	/**
+	 * Completes payment of a loan
+	 */
 	public void makePayment() {
 		this.status = LoanRepaymentStatus.PAID;
 		this.outstanding = 0.0;
 	}
 
+	/**
+	 * Processes partial payment
+	 * @param amount
+	 */
 	public void adjustDueAmount(double amount) {
 		this.outstanding -= amount;
 	}

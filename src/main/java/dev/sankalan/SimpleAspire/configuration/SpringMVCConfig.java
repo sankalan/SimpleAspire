@@ -12,6 +12,9 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 	@Autowired
 	AuthInterceptor authInterceptor;
 	
+	/**
+	 * Registers Auth interceptor
+	 */
 	@Override
 	public void addInterceptors(final InterceptorRegistry registry) {
 		registry.addInterceptor(authInterceptor);

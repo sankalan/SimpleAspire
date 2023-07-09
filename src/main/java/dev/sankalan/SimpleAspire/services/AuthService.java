@@ -9,12 +9,20 @@ import dev.sankalan.SimpleAspire.models.User;
 import dev.sankalan.SimpleAspire.repositories.UserRepository;
 import io.micrometer.common.util.StringUtils;
 
+/**
+ * Service for auth header validation
+ */
 @Component
 public class AuthService {
 	
 	@Autowired
 	UserRepository userRepo;
 	
+	/**
+	 * Fetches the user context based on auth header data
+	 * @param basicAuthHeaderValue
+	 * @return {@link User}
+	 */
 	public User fetchUserContext(String basicAuthHeaderValue) {
 		if (!StringUtils.isBlank(basicAuthHeaderValue) 
 				&& basicAuthHeaderValue.startsWith("Basic")) {

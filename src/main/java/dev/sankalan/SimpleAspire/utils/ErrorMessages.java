@@ -1,5 +1,9 @@
 package dev.sankalan.SimpleAspire.utils;
 
+/**
+ * Holds all user facing error messages
+ * This structure can be used for L10N
+ */
 public class ErrorMessages {
 	public static final String AUTH_FAILED = 
 			"Authorization failed! Make sure you are passing auth header with valid username and password.";

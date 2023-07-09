@@ -14,6 +14,9 @@ import dev.sankalan.SimpleAspire.utils.ErrorMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Intercepts request and check for credentials in header for auth
+ */
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
@@ -56,6 +59,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return false;
 		}
 		
+		/* sets user context for the request*/
 		sessionContext.setUser(user);
 
 		return true;

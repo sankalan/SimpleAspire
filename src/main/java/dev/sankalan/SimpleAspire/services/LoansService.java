@@ -21,6 +21,9 @@ import dev.sankalan.SimpleAspire.repositories.UserRepository;
 import dev.sankalan.SimpleAspire.utils.ErrorMessages;
 import dev.sankalan.SimpleAspire.utils.LoanUtil;
 
+/**
+ * Service to handle Loan operations: GET, CREATE, APPROVE
+ */
 @Component
 public class LoansService {
 
@@ -33,7 +36,10 @@ public class LoansService {
 	
 	private final Logger log = LogManager.getLogger(getClass());
 
-	
+	/**
+	 * Get all loans
+	 * @return List<Loan>
+	 */
 	public List<Loan> getAllLoans() {
 		log.info("Service: getting all loans: ");
 		List<Loan> loans = new ArrayList<Loan>();
@@ -41,6 +47,11 @@ public class LoansService {
 		return loans;
 	}
 	
+	/**
+	 * Get all loans of an user
+	 * @param username
+	 * @return List<Loan>
+	 */
 	public List<Loan> getLoanByUser(String username) {
 		log.info("Service: getting all loans for an user");
 		User user = userRepo.findByUsername(username);
@@ -52,11 +63,17 @@ public class LoansService {
 		return loanRepo.findByOwnerId(user.getUserId());
 	}
 	
+	/**
+	 * Create a loan for the user
+	 * @param loan
+	 * @param ownerName
+	 */
 	public void createLoan(Loan loan, String ownerName) {
 		if(loan.getAmount()<=0 || loan.getTerm()<=0) {
 			log.error("Invalid input, amount:" + loan.getAmount() + ", term: " + loan.getTerm());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.INVALID_INPUT_FOR_CREATE);
 		}
+		/* Get user */
 		User user = userRepo.findByUsername(ownerName);
 		if(user == null) {
 			log.error("Cannot find user");
@@ -67,6 +84,7 @@ public class LoansService {
 		loanRepo.save(loan);
 	}
 	
+	/* Creates Loan repayment schedule based on term and amount*/
 	private List<LoanRepaymentSchedule> generateRepayments(Loan loan) {
 		double installmentAmount = loanUtil.getFormattedPrice(loan.getAmount()/loan.getTerm());
 		Date lastDate = loan.getDate();
@@ -79,6 +97,7 @@ public class LoansService {
 			lastDate = nextDate;
 		}
 		
+		/* Adjust rounding errors*/
 		double roundUpAdjustment = loanUtil.getFormattedPrice(installmentAmount + loan.getAmount() - installmentAmount*loan.getTerm());
 		
 		repayments.get(loan.getTerm()-1).setAmount(roundUpAdjustment);
@@ -86,6 +105,10 @@ public class LoansService {
 		return repayments;
 	}
 
+	/**
+	 * Approves a loan
+	 * @param id
+	 */
 	public void approveLoan(int id) {
 		Optional<Loan> loan = loanRepo.findById(id);
 		

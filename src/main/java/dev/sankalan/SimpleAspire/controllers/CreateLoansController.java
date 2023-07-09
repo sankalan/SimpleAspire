@@ -26,6 +26,11 @@ public class CreateLoansController {
 	
 	private final Logger log = LogManager.getLogger(getClass());
 	
+	/**
+	 * Handles loan creation
+	 * @param loan
+	 * @param response
+	 */
 	@PostMapping("/loan")
 	public void createLoan(@RequestBody final Loan loan, HttpServletResponse response) {
 		log.info("Creating loan: " + loan);

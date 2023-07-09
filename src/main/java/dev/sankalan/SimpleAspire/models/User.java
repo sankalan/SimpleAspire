@@ -6,6 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Model for User data
+ */
 @Entity
 @Table(name = "user_table")
 public class User {
@@ -37,6 +40,11 @@ public class User {
 		return role;
 	}
 	
+	/**
+	 * Validate password
+	 * @param pswd
+	 * @return boolean indication authentication success
+	 */
 	public boolean authenticate(String pswd) {
 		return pswd.equals(password);
 	}

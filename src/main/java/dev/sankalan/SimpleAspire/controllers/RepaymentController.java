@@ -20,6 +20,11 @@ public class RepaymentController {
 	private LoanRepaymentService loanRepaymentService;
 	private final Logger log = LogManager.getLogger(getClass());
 	
+	/**
+	 * Handles loan repayment
+	 * @param id
+	 * @param repayment
+	 */
 	@PostMapping("/loan/{id}/pay")
 	public void repayLoan(@PathVariable int id, @RequestBody Repayment repayment) {
 		try {
